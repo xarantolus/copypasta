@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Copypasta Generator</title>
+
+    <link rel="stylesheet" href="pico.min.css">
+    <link rel="stylesheet" href="gh-fork-ribbon.css">
+    <style>
+        :root {
+            --font-size: 16px;
+        }
+
+        #app {
+            max-width: 800px;
+            margin: 0 auto;
+            font-family: Avenir, Helvetica, Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            margin-top: .5%;
+            padding: 0 2.5%;
+        }
+
+        .invisible {
+            visibility: hidden;
+        }
+
+    </style>
+</head>
+
+<body>
+    <a class="github-fork-ribbon" href="https://github.com/xarantolus/copypasta" data-ribbon="Fork me on GitHub" title="Fork me on GitHub">Fork me on GitHub</a>
+
+    <div id="app">
+        <h1 style="text-align: center">Copypasta Generator</h1>
+        <noscript>Sorry, this page requires JavaScript to replace/generate the text. Please enable it in your browser settings.</noscript>
+
+        <form>
+            <label for="copypasta">Select a copypasta</label>
+            <select name="copypasta" class="dropdown"></select>
+
+            <fieldset id="copypasta-input">
+            </fieldset>
+
+            <button type="button" id="copy-button" class="invisible">Copy to Clipboard</button>
+        </form>
+
+        <div id="copypasta-output">
+
+        </div>
+    </div>
+    <script>
+        var copyPastas = {
+            "gnu-linux": {
+                name: "GNU/Linux",
+                text: "I'd just like to interject for a moment. What you're refering to as %{1}, is in fact, %{2:gnu}/%{2:linux}, or as I've recently taken to calling it, %{2:gnu} plus %{2:linux}. %{1} is not an operating system unto itself, but rather another free component of a fully functioning %{2:gnu} system made useful by the %{2:gnu} corelibs, shell utilities and vital system components comprising a full OS as defined by POSIX.\n\nMany computer users run a modified version of the %{2:gnu} system every day, without realizing it. Through a peculiar turn of events, the version of %{2:gnu} which is widely used today is often called %{1}, and many of its users are not aware that it is basically the %{2:gnu} system, developed by the %{2:gnu} Project.\n\nThere really is a %{1}, and these people are using it, but it is just a part of the system they use. %{1} is the kernel: the program in the system that allocates the machine's resources to the other programs that you run. The kernel is an essential part of an operating system, but useless by itself; it can only function in the context of a complete operating system. %{2:linux} is normally used in combination with the %{2:gnu} operating system: the whole system is basically %{2:gnu} with %{2:linux} added, or %{2:gnu}/%{2:linux}. All the so-called %{1} distributions are really distributions of %{2:gnu}/%{2:linux}!",
+                inputs: [
+                    {
+                        name: "Linux",
+                        type: "text",
+                        value: "Linux"
+                    },
+                    {
+                        name: "GNU/Linux",
+                        regex: /^\s*(?<gnu>.+)\s*\/\s*(?<linux>.+)\s*$/,
+                        value: "GNU/Linux",
+                        help: "Enter two texts separated by a slash (/)"
+                    }
+                ]
+            }
+        }
+
+        var dropdown = document.querySelector(".dropdown");
+
+        function validateAndRenderCopypasta() {
+            var copypasta = copyPastas[dropdown.value];
+            var inputs = document.querySelector("form").querySelectorAll("input");
+            var copypastaText = copypasta.text;
+
+            var valid = true;
+            for (var i = 0; i < inputs.length; i++) {
+                var input = inputs[i];
+                var inputCopypasta = copypasta.inputs[i];
+                var userInput = input.value.trim();
+
+                if (inputCopypasta.regex) {
+                    inputCopypasta.regex.lastIndex = 0;
+                    var match = inputCopypasta.regex.exec(userInput);
+                    if (match) {
+                        for (var key in match.groups) {
+                            copypastaText = copypastaText.replaceAll("%{" + (i + 1) + ":" + key + "}", match.groups[key].trim());
+                        }
+
+                        input.setAttribute("aria-label", "Valid input");
+                        input.setAttribute("aria-invalid", false);
+
+                        if (inputCopypasta.help) {
+                            input.nextSibling.className = "invisible";
+                        }
+                    } else {
+                        valid = false;
+
+                        input.setAttribute("aria-label", "Invalid input");
+                        input.setAttribute("aria-invalid", true);
+                        if (inputCopypasta.help) {
+                            input.nextSibling.className = "";
+                        }
+                        break;
+                    }
+                } else {
+                    copypastaText = copypastaText.replaceAll("%{" + (i + 1) + "}", userInput);
+                }
+            }
+
+            var output = document.querySelector("#copypasta-output");
+            var copyButton = document.querySelector("#copy-button");
+            if (valid) {
+                output.innerText = copypastaText;
+                copyButton.className = "";
+                copyButton.disabled = false;
+            } else {
+                output.innerText = "";
+                copyButton.className = "invisible";
+                copyButton.disabled = true;
+            }
+        }
+
+        var copyButton = document.querySelector("#copy-button");
+        function copyCopypasta() {
+            var output = document.querySelector("#copypasta-output");
+            if (output.innerText.trim() === "") return;
+
+
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(output.innerText);
+            } else {
+                var textArea = document.createElement("textarea");
+                textArea.className = "invisible";
+                textArea.value = output.innerText;
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                document.execCommand("copy");
+                document.body.removeChild(textArea);
+            }
+            copyButton.innerText = "Copied!";
+            setTimeout(function () {
+                copyButton.innerText = "Copy to Clipboard";
+            }, 750);
+        }
+
+
+        function updateDropdown() {
+            var selected = dropdown.options[dropdown.selectedIndex].value;
+            var copyPasta = copyPastas[selected];
+
+            var fieldset = document.querySelector("#copypasta-input");
+            fieldset.innerHTML = "";
+
+            for (var i = 0; i < copyPasta.inputs.length; i++) {
+                var input = copyPasta.inputs[i];
+
+                var label = document.createElement("label");
+                label.setAttribute("for", input.name);
+                label.innerText = input.name;
+                fieldset.appendChild(label);
+
+                var inputElement = document.createElement("input");
+                inputElement.setAttribute("type", "text");
+                inputElement.setAttribute("placeholder", input.name);
+                inputElement.setAttribute("required", true);
+                inputElement.setAttribute("value", input.value || "");
+                inputElement.addEventListener("input", validateAndRenderCopypasta);
+                fieldset.appendChild(inputElement);
+
+                if (input.help) {
+                    var help = document.createElement("small");
+                    help.innerText = input.help;
+                    help.className = "invisible";
+                    fieldset.appendChild(help);
+                }
+            }
+
+            validateAndRenderCopypasta();
+        }
+
+        var keys = Object.keys(copyPastas)
+        for (var i = 0; i < keys.length; i++) {
+            var key = keys[i];
+            var option = document.createElement("option");
+            option.value = key;
+            option.innerText = copyPastas[key].name;
+            dropdown.appendChild(option);
+        }
+
+        copyButton.addEventListener("click", copyCopypasta);
+
+        updateDropdown();
+        dropdown.addEventListener("change", updateDropdown);
+
+    </script>
+</body>
+
+</html>
