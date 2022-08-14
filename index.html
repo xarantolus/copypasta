@@ -58,15 +58,21 @@
                 name: "GNU/Linux",
                 text: "I'd just like to interject for a moment. What you're refering to as %{1}, is in fact, %{2:gnu}/%{2:linux}, or as I've recently taken to calling it, %{2:gnu} plus %{2:linux}. %{1} is not an operating system unto itself, but rather another free component of a fully functioning %{2:gnu} system made useful by the %{2:gnu} corelibs, shell utilities and vital system components comprising a full OS as defined by POSIX.\n\nMany computer users run a modified version of the %{2:gnu} system every day, without realizing it. Through a peculiar turn of events, the version of %{2:gnu} which is widely used today is often called %{1}, and many of its users are not aware that it is basically the %{2:gnu} system, developed by the %{2:gnu} Project.\n\nThere really is a %{1}, and these people are using it, but it is just a part of the system they use. %{1} is the kernel: the program in the system that allocates the machine's resources to the other programs that you run. The kernel is an essential part of an operating system, but useless by itself; it can only function in the context of a complete operating system. %{2:linux} is normally used in combination with the %{2:gnu} operating system: the whole system is basically %{2:gnu} with %{2:linux} added, or %{2:gnu}/%{2:linux}. All the so-called %{1} distributions are really distributions of %{2:gnu}/%{2:linux}!",
                 inputs: [
+                    // Inputs are referenced by their number (index+1), e.g. %{1} etc.
                     {
+                        // Simple text input with a default value, it is referenced in the text using "%{1}"
                         name: "Linux",
-                        type: "text",
                         value: "Linux"
                     },
                     {
+                        // Text input with a default value, the Regex with named groups will be used for replacements
                         name: "GNU/Linux",
-                        regex: /^\s*(?<gnu>.+)\s*\/\s*(?<linux>.+)\s*$/,
                         value: "GNU/Linux",
+                        // Note the named groups in the regex, they will be used for replacements
+                        // Named groups are referenced in the text using "%{2:group_name}", where group_name is the name of the capturing group
+                        // So here we defined %{2:gnu} and %{2:linux}
+                        regex: /^\s*(?<gnu>.+)\s*\/\s*(?<linux>.+)\s*$/,
+                        // The help text is displayed when the regex doesn't match
                         help: "Enter two texts separated by a slash (/)"
                     }
                 ]
