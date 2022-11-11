@@ -96,13 +96,15 @@
                     {
                         name: "Rick and Morty",
                         value: "Rick and Morty",
+                        regex: /^\s*(?<rick>\S+)\s+(?<rest>.+)\s*$/,
+                        help: "Enter at least two words"
                     },
                     {
                         name: "IQ",
                         value: "IQ"
                     }
                 ],
-                text: "To be fair, you have to have a very high %{2} to understand %{1}. The humour is extremely subtle, and without a solid grasp of theoretical physics most of the jokes will go over a typical viewer's head. There's also %{1}'s nihilistic outlook, which is deftly woven into his characterisation- his personal philosophy draws heavily from Narodnaya Volya literature, for instance. The fans understand this stuff; they have the intellectual capacity to truly appreciate the depths of these jokes, to realise that they're not just funny- they say something deep about LIFE. As a consequence people who dislike %{1} truly ARE idiots- of course they wouldn't appreciate, for instance, the humour in %{1}'s existential catchphrase \"i slept with joe,\" which itself is a cryptic reference to Turgenev's Russian epic Fathers and Sons. I'm smirking right now just imagining one of those addlepated simpletons scratching their heads in confusion as Dan Harmon's genius wit unfolds itself on their television screens. What fools.. how I pity them. 😂\n\nAnd yes, by the way, i DO have a %{1} tattoo. And no, you cannot see it. It's for the ladies' eyes only- and even then they have to demonstrate that they're within 5 %{2} points of my own (preferably lower) beforehand. Nothin personnel kid 😎"
+                text: "To be fair, you have to have a very high %{2} to understand %{1:rick} %{1:rest}. The humor is extremely subtle, and without a solid grasp of theoretical physics most of the jokes will go over a typical viewer's head. There's also %{1:rick}'s nihilistic outlook, which is deftly woven into his characterisation - his personal philosophy draws heavily from Narodnaya Volya literature, for instance. The fans understand this stuff; they have the intellectual capacity to truly appreciate the depths of these jokes, to realize that they're not just funny- they say something deep about LIFE. As a consequence people who dislike %{1:rick} %{1:rest} truly ARE idiots - of course they wouldn't appreciate, for instance, the humour in %{1:rick}'s existencial catchphrase \"Wubba Lubba Dub Dub,\" which itself is a cryptic reference to Turgenev's Russian epic Fathers and Sons.\nI'm smirking right now just imagining one of those addlepated simpletons scratching their heads in confusion as Dan Harmon's genius unfolds itself on their television screens. What fools... how I pity them. 😂\n\nAnd yes by the way, I DO have a %{1:rick} %{1:rest} tattoo. And no, you cannot see it. It's for the ladies' eyes only- And even they have to demonstrate that they're within 5 %{2} points of my own (preferably lower) beforehand."
             }
         }
 
