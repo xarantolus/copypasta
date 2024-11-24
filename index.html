@@ -162,6 +162,25 @@
                     }
                 ],
                 text: "The %{1} knows %{3} it is at all times. It knows this because it knows %{3} it isn't. By subtracting %{3} it is from %{3} it isn't, or %{3} it isn't from %{3} it is (whichever is greater), it obtains a difference, or deviation. The guidance subsystem uses deviations to generate corrective commands to drive the %{1} from a %{2} %{3} it is to a %{2} %{3} it isn't, and arriving at a %{2} %{3} it wasn't, it now is. Consequently, the %{2} %{3} it is, is now the %{2} that it wasn't, and it follows that the %{2} that it was, is now the %{2} that it isn't.\n\nIn the event that the %{2} that it is in is not the %{2} that it wasn't, the system has acquired a variation, the variation being the difference between %{3} the %{1} is, and %{3} it wasn't. If variation is considered to be a significant factor, it too may be corrected by the GEA. However, the %{1} must also know %{3} it was.\n\nThe %{1} guidance computer scenario works as follows. Because a variation has modified some of the information the %{1} has obtained, it is not sure just %{3} it is. However, it is sure %{3} it isn't, within reason, and it knows %{3} it was. It now subtracts %{3} it should be from %{3} it wasn't, or vice-versa, and by differentiating this from the algebraic sum of %{3} it shouldn't be, and %{3} it was, it is able to obtain the deviation and its variation, which is called error."
+            },
+            "smelly_nerds": {
+                name: "Smelly Nerds",
+                inputs: [
+                    {
+                        name: "Code",
+                        value: "code"
+                    },
+                    {
+                        name: "Exe",
+                        value: "EXE"
+                    },
+                    {
+                        name: "Application",
+                        value: "application"
+                    }
+                ],
+                // The pasta is changed a bit because I think it is more readable for typical inputs, I don't care about the original too much
+                text: "I DONT GIVE A FUCK ABOUT THE FUCKING %{1:upper}! i just want to download this stupid fucking %{3} and use it\n\nWHY IS THERE %{1:upper}??? MAKE A FUCKING .%{2} FILE AND GIVE IT TO ME. these dumbfucks think that everyone is a developer and understands the %{1}. well i am not and i don't understand it. I only know to download %{3}s. SO WHY THE FUCK IS THERE %{1:upper}? make an %{2} file and give it to me. STUPID FUCKING SMELLY NERDS"
             }
         }
 
@@ -184,6 +203,7 @@
                     if (match) {
                         for (var key in match.groups) {
                             copypastaText = copypastaText.replaceAll("%{" + (i + 1) + ":" + key + "}", match.groups[key].trim());
+                            copypastaText = copypastaText.replaceAll("%{" + (i + 1) + ":" + key + ":upper}", match.groups[key].trim().toUpperCase());
                         }
 
                         input.setAttribute("aria-label", "Valid input");
@@ -204,6 +224,7 @@
                     }
                 } else {
                     copypastaText = copypastaText.replaceAll("%{" + (i + 1) + "}", userInput);
+                    copypastaText = copypastaText.replaceAll("%{" + (i + 1) + ":upper}", userInput.toUpperCase());
                 }
             }
 
